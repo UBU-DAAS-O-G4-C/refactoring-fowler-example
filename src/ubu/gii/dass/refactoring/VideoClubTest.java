@@ -55,5 +55,16 @@ public class VideoClubTest {
 		assertTrue("Calcula mal el alquiler", salidaEsperada.equals(salida));
 
 	}
+	
 
+	@Test
+	public void testSetPriceCode() {
+	    Movie pelicula = new Movie("Prueba", Movie.REGULAR);
+
+	    pelicula.setPriceCode(Movie.NEW_RELEASE);
+
+	    assertEquals(Movie.NEW_RELEASE, pelicula.getPriceCode());
+	}
+	
+	
 }
