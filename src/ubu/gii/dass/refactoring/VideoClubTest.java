@@ -55,5 +55,18 @@ public class VideoClubTest {
 		assertTrue("Calcula mal el alquiler", salidaEsperada.equals(salida));
 
 	}
+	
+	@Test
+	public void testNewReleaseOneDayEarnsOnePoint() {
+	    Customer customer = new Customer("Miguel");
+	    Movie movie = new Movie("Película Estreno", Movie.NEW_RELEASE);
+	    Rental rental = new Rental(movie, 1); // 1 solo día
+	    
+	    customer.addRental(rental);
+	    String statement = customer.statement();
+	    
+	    // Verificamos que solo gane 1 punto (no el bono de 2)
+	    assertTrue(statement.contains("You earned 1 frequent renter points"));
+	}
 
 }
