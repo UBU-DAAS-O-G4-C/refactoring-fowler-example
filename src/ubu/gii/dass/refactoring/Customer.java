@@ -3,9 +3,9 @@ package ubu.gii.dass.refactoring;
 /**
 * Tema  Refactorizaciones 
 *
-* Ejemplo de aplicaci�n de refactorizaciones. Actualizado para colecciones gen�ricas de java 1.5
+* Ejemplo de aplicación de refactorizaciones. Actualizado para colecciones genéricas de java 1.5
 *
-* @author M. Fowler y <A HREF="mailto:clopezno@ubu.es">Carlos L�pez</A>
+* @author M. Fowler y <A HREF="mailto:clopezno@ubu.es">Carlos López</A>
 * @version 1.1
 * @see java.io.File
 *
@@ -35,31 +35,44 @@ public class Customer {
 		int frequentRenterPoints = 0;
 		Iterator<Rental> rentals = _rentals.iterator();
 		String result = "Rental Record for " + getName() + "\n";
+
 		while (rentals.hasNext()) {
 			double thisAmount = 0;
-			Rental each = rentals.next();
+			Rental rental = rentals.next();
+
 			// determine amounts for each line
-			thisAmount = each.getCharge();
-			
-			frequentRenterPoints += getFrequentRenterPoints(each);
+			thisAmount = rental.getCharge();
+
+			// add frequent renter points
+			frequentRenterPoints = updateFrequentRenterPoints(frequentRenterPoints, rental);
+
 			// show figures for this rental
-			result += "\t" + each.getMovie().getTitle() + "\t"
+			result += "\t" + rental.getMovie().getTitle() + "\t"
 					+ String.valueOf(thisAmount) + "\n";
 			totalAmount += thisAmount;
 		}
+
 		// add footer lines
 		result += "Amount owed is " + String.valueOf(totalAmount) + "\n";
 		result += "You earned " + String.valueOf(frequentRenterPoints)
 				+ " frequent renter points";
+
 		return result;
 	}
 
-	private int getFrequentRenterPoints(Rental aRental) {
-		// Si es un estreno de más de 1 día, vale 2 puntos
-		if ((aRental.getMovie().getPriceCode() == Movie.NEW_RELEASE) && aRental.getDaysRented() > 1) {
-			return 2;
+	/**
+	 * @param frequentRenterPoints
+	 * @param rental
+	 * @return
+	 */
+	private int updateFrequentRenterPoints(int frequentRenterPoints, Rental rental) {
+		frequentRenterPoints++;
+
+		if ((rental.getMovie().getPriceCode() == Movie.NEW_RELEASE)
+				&& rental.getDaysRented() > 1) {
+			frequentRenterPoints++;
 		}
-		// En cualquier otro caso, vale 1 punto
-		return 1;
+
+		return frequentRenterPoints;
 	}
 }
