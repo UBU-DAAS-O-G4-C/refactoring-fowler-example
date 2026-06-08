@@ -28,23 +28,15 @@ public class Rental {
 	}
 
 	double getCharge() {
-		double thisAmount = 0;
-		switch (getMovie().getPriceCode()) {
-		case Movie.REGULAR:
-			thisAmount += 2;
-			if (getDaysRented() > 2)
-				thisAmount += (getDaysRented() - 2) * 1.5;
-			break;
-		case Movie.NEW_RELEASE:
-			thisAmount += getDaysRented() * 3;
-			break;
-		case Movie.CHILDRENS:
-			thisAmount += 1.5;
-			if (getDaysRented() > 3)
-				thisAmount += (getDaysRented() - 3) * 1.5;
-			break;
-		}
-		return thisAmount;
+		return calculateCharge();
+	}
+
+	/**
+	 * @return
+	 * @deprecated Use {@link ubu.gii.dass.refactoring.Movie#calculateCharge(ubu.gii.dass.refactoring.Rental)} instead
+	 */
+	private double calculateCharge() {
+		return _movie.calculateCharge(this);
 	}
 
 }
