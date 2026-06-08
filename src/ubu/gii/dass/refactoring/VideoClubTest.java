@@ -78,5 +78,11 @@ public class VideoClubTest {
 	    assertEquals(Movie.NEW_RELEASE, pelicula.getPriceCode());
 	}
 	
+	@Test
+	public void testPriceCodes() {
+	    assertEquals(Movie.REGULAR, new RegularPrice().getPriceCode());
+	    assertEquals(Movie.NEW_RELEASE, new NewReleasePrice().getPriceCode());
+	    assertEquals(Movie.CHILDRENS, new ChildrensPrice().getPriceCode());
+	}
 	
 }
