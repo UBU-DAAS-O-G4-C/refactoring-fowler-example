@@ -18,71 +18,88 @@ import org.junit.Test;
  * 
  */
 public class VideoClubTest {
-	protected Movie m0, m11, m12, m2;
-	protected Customer c1;
-	
-	@Before
-	public void setUp() {
-		m11 = new Movie("Sky Captain", 1);
-		m12 = new Movie("Alejandro Magno", 1);
-		m0 = new Movie("Accion Mutante", 0);
-		m2 = new Movie("Hermano Oso", 2);
 
-		c1 = new Customer("Manuel");
-	}
+    protected Movie m0, m11, m12, m2;
+    protected Customer c1;
 
-	@After
-	public void tearDown() throws Exception {}
+    @Before
+    public void setUp() {
+        m11 = new Movie("Sky Captain", Movie.NEW_RELEASE);
+        m12 = new Movie("Alejandro Magno", Movie.NEW_RELEASE);
+        m0 = new Movie("Accion Mutante", Movie.REGULAR);
+        m2 = new Movie("Hermano Oso", Movie.CHILDRENS);
 
-	@Test
-	public void testAlquiler() {
+        c1 = new Customer("Manuel");
+    }
 
-		Rental r1 = new Rental(m11, 5);
-		Rental r2 = new Rental(m0, 1);
-		Rental r3 = new Rental(m2, 10);
+    @After
+    public void tearDown() throws Exception {
+    }
 
-		c1.addRental(r1);
-		c1.addRental(r2);
-		c1.addRental(r3);
+    @Test
+    public void testAlquiler() {
+        Rental r1 = new Rental(m11, 5);
+        Rental r2 = new Rental(m0, 1);
+        Rental r3 = new Rental(m2, 10);
 
-		String salida = c1.statement();
+        c1.addRental(r1);
+        c1.addRental(r2);
+        c1.addRental(r3);
 
-		String salidaEsperada = new String("Rental Record for Manuel\n"
-				+ "\tSky Captain\t15.0\n" + "\tAccion Mutante\t2.0\n"
-				+ "\tHermano Oso\t12.0\n" + "Amount owed is 29.0\n"
-				+ "You earned 4 frequent renter points");
+        String salida = c1.statement();
 
-		assertTrue("Calcula mal el alquiler", salidaEsperada.equals(salida));
+        String salidaEsperada = "Rental Record for Manuel\n"
+                + "\tSky Captain\t15.0\n"
+                + "\tAccion Mutante\t2.0\n"
+                + "\tHermano Oso\t12.0\n"
+                + "Amount owed is 29.0\n"
+                + "You earned 4 frequent renter points";
 
-	}
-	
-	@Test
-	public void testNewReleaseOneDayEarnsOnePoint() {
-	    Customer customer = new Customer("Miguel");
-	    Movie movie = new Movie("Película Estreno", Movie.NEW_RELEASE);
-	    Rental rental = new Rental(movie, 1); // 1 solo día
+        assertTrue("Calcula mal el alquiler", salidaEsperada.equals(salida));
+    }
 
-	    customer.addRental(rental);
-	    String statement = customer.statement();
+    @Test
+    public void testNewReleaseOneDayEarnsOnePoint() {
+        Customer customer = new Customer("Miguel");
+        Movie movie = new Movie("Película Estreno", Movie.NEW_RELEASE);
+        Rental rental = new Rental(movie, 1);
 
-	    // Verificamos que solo gane 1 punto (no el bono de 2)
-	    assertTrue(statement.contains("You earned 1 frequent renter points"));
-	}
+        customer.addRental(rental);
+        String statement = customer.statement();
 
-	@Test
-	public void testSetPriceCode() {
-	    Movie pelicula = new Movie("Prueba", Movie.REGULAR);
+        assertTrue(statement.contains("You earned 1 frequent renter points"));
+    }
 
-	    pelicula.setPriceCode(Movie.NEW_RELEASE);
+    @Test
+    public void testSetPriceCode() {
+        Movie pelicula = new Movie("Prueba", Movie.REGULAR);
 
-	    assertEquals(Movie.NEW_RELEASE, pelicula.getPriceCode());
-	}
-	
-	@Test
-	public void testPriceCodes() {
-	    assertEquals(Movie.REGULAR, new RegularPrice().getPriceCode());
-	    assertEquals(Movie.NEW_RELEASE, new NewReleasePrice().getPriceCode());
-	    assertEquals(Movie.CHILDRENS, new ChildrensPrice().getPriceCode());
-	}
-	
+        pelicula.setPriceCode(Movie.NEW_RELEASE);
+
+        assertEquals(Movie.NEW_RELEASE, pelicula.getPriceCode());
+    }
+
+    @Test
+    public void testPriceCodes() {
+        assertEquals(Movie.REGULAR, new RegularPrice().getPriceCode());
+        assertEquals(Movie.NEW_RELEASE, new NewReleasePrice().getPriceCode());
+        assertEquals(Movie.CHILDRENS, new ChildrensPrice().getPriceCode());
+    }
+
+    @Test
+    public void testAlquilerRegularTresDias() {
+        Movie regular = new Movie("Accion Mutante", Movie.REGULAR);
+        Customer cliente = new Customer("Guillermo");
+
+        cliente.addRental(new Rental(regular, 3));
+
+        String salida = cliente.statement();
+
+        String salidaEsperada = "Rental Record for Guillermo\n"
+                + "\tAccion Mutante\t3.5\n"
+                + "Amount owed is 3.5\n"
+                + "You earned 1 frequent renter points";
+
+        assertEquals(salidaEsperada, salida);
+    }
 }
