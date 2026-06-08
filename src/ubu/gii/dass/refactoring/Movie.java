@@ -12,65 +12,74 @@ package ubu.gii.dass.refactoring;
  */
 
 public class Movie {
-	public static final int CHILDRENS = 2;
-	public static final int REGULAR = 0;
-	public static final int NEW_RELEASE = 1;
 
-	private String _title;
-	private int _priceCode;
+    public static final int CHILDRENS = 2;
+    public static final int REGULAR = 0;
+    public static final int NEW_RELEASE = 1;
 
-	public Movie(String title, int priceCode) {
-		_title = title;
-		set_priceCode(priceCode);
-	}
+    private static final double REGULAR_BASE_PRICE = 2.0;
+    private static final int REGULAR_BASE_DAYS = 2;
+    private static final double EXTRA_DAY_PRICE = 1.5;
+    private static final double NEW_RELEASE_DAILY_PRICE = 3.0;
+    private static final double CHILDRENS_BASE_PRICE = 1.5;
+    private static final int CHILDRENS_BASE_DAYS = 3;
 
-	public int getPriceCode() {
-		return get_priceCode();
-	}
+    private String _title;
+    private int _priceCode;
 
-	public void setPriceCode(int arg) {
-		set_priceCode(arg);
-	}
+    public Movie(String title, int priceCode) {
+        _title = title;
+        set_priceCode(priceCode);
+    }
 
-	public String getTitle() {
-		return _title;
-	}
+    public int getPriceCode() {
+        return get_priceCode();
+    }
 
-	/**
-	 * @param rental TODO
-	 * @return
-	 */
-	double calculateCharge(Rental rental) {
-		double thisAmount = 0;
-		switch (rental.getMovie().getPriceCode()) {
-		case Movie.REGULAR:
-			thisAmount += 2;
-			if (rental.getDaysRented() > 2)
-				thisAmount += (rental.getDaysRented() - 2) * 1.5;
-			break;
-		case Movie.NEW_RELEASE:
-			thisAmount += rental.getDaysRented() * 3;
-			break;
-		case Movie.CHILDRENS:
-			thisAmount += 1.5;
-			if (rental.getDaysRented() > 3)
-				thisAmount += (rental.getDaysRented() - 3) * 1.5;
-			break;
-		}
-		return thisAmount;
-	}
+    public void setPriceCode(int arg) {
+        set_priceCode(arg);
+    }
 
-	/**
-	 * @return the _priceCode
-	 */
-	private int get_priceCode() {
-		return _priceCode;
-	}
+    public String getTitle() {
+        return _title;
+    }
 
-	/**
-	 * @param _priceCode the _priceCode to set
-	 */
-	private void set_priceCode(int _priceCode) {
-		this._priceCode = _priceCode;
-	}
+    double calculateCharge(Rental rental) {
+        double thisAmount = 0;
+
+        switch (rental.getMovie().getPriceCode()) {
+            case Movie.REGULAR:
+                thisAmount += REGULAR_BASE_PRICE;
+
+                if (rental.getDaysRented() > REGULAR_BASE_DAYS) {
+                    thisAmount += (rental.getDaysRented() - REGULAR_BASE_DAYS) * EXTRA_DAY_PRICE;
+                }
+
+                break;
+
+            case Movie.NEW_RELEASE:
+                thisAmount += rental.getDaysRented() * NEW_RELEASE_DAILY_PRICE;
+
+                break;
+
+            case Movie.CHILDRENS:
+                thisAmount += CHILDRENS_BASE_PRICE;
+
+                if (rental.getDaysRented() > CHILDRENS_BASE_DAYS) {
+                    thisAmount += (rental.getDaysRented() - CHILDRENS_BASE_DAYS) * EXTRA_DAY_PRICE;
+                }
+
+                break;
+        }
+
+        return thisAmount;
+    }
+
+    private int get_priceCode() {
+        return _priceCode;
+    }
+
+    private void set_priceCode(int _priceCode) {
+        this._priceCode = _priceCode;
+    }
 }

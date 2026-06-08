@@ -10,69 +10,66 @@ package ubu.gii.dass.refactoring;
 * @see java.io.File
 *
 */
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class Customer {
-	private String _name;
-	private List<Rental> _rentals;
 
-	public Customer(String name) {
-		_name = name;
-		_rentals = new ArrayList<Rental>();
+    private static final int NEW_RELEASE_BONUS_DAYS = 1;
 
-	};
+    private String _name;
+    private List<Rental> _rentals;
 
-	public void addRental(Rental arg) {
-		_rentals.add(arg);
-	}
+    public Customer(String name) {
+        _name = name;
+        _rentals = new ArrayList<Rental>();
+    }
 
-	public String getName() {
-		return _name;
-	};
+    public void addRental(Rental arg) {
+        _rentals.add(arg);
+    }
 
-	public String statement() {
-		double totalAmount = 0;
-		int frequentRenterPoints = 0;
-		Iterator<Rental> rentals = _rentals.iterator();
-		String result = "Rental Record for " + getName() + "\n";
+    public String getName() {
+        return _name;
+    }
 
-		while (rentals.hasNext()) {
-			double thisAmount = 0;
-			Rental rental = rentals.next();
+    public String statement() {
+        double totalAmount = 0;
+        int frequentRenterPoints = 0;
+        Iterator<Rental> rentals = _rentals.iterator();
 
-			// determine amounts for each line
-			thisAmount = rental.getCharge();
+        String result = "Rental Record for " + getName() + "\n";
 
-			// add frequent renter points
-			frequentRenterPoints = updateFrequentRenterPoints(frequentRenterPoints, rental);
+        while (rentals.hasNext()) {
+            double thisAmount = 0;
+            Rental rental = rentals.next();
 
-			// show figures for this rental
-			result += "\t" + rental.getMovie().getTitle() + "\t"
-					+ String.valueOf(thisAmount) + "\n";
-			totalAmount += thisAmount;
-		}
+            thisAmount = rental.getCharge();
 
-		// add footer lines
-		result += "Amount owed is " + String.valueOf(totalAmount) + "\n";
-		result += "You earned " + String.valueOf(frequentRenterPoints)
-				+ " frequent renter points";
+            frequentRenterPoints = updateFrequentRenterPoints(frequentRenterPoints, rental);
 
-		return result;
-	}
+            result += "\t" + rental.getMovie().getTitle() + "\t"
+                    + String.valueOf(thisAmount) + "\n";
 
-	/**
-	 * @param frequentRenterPoints
-	 * @param rental
-	 * @return
-	 */
-	private int updateFrequentRenterPoints(int frequentRenterPoints, Rental rental) {
-		frequentRenterPoints++;
+            totalAmount += thisAmount;
+        }
 
-		if ((rental.getMovie().getPriceCode() == Movie.NEW_RELEASE)
-				&& rental.getDaysRented() > 1) {
-			frequentRenterPoints++;
-		}
+        result += "Amount owed is " + String.valueOf(totalAmount) + "\n";
+        result += "You earned " + String.valueOf(frequentRenterPoints)
+                + " frequent renter points";
 
-		return frequentRenterPoints;
-	}
+        return result;
+    }
+
+    private int updateFrequentRenterPoints(int frequentRenterPoints, Rental rental) {
+        frequentRenterPoints++;
+
+        if ((rental.getMovie().getPriceCode() == Movie.NEW_RELEASE)
+                && rental.getDaysRented() > NEW_RELEASE_BONUS_DAYS) {
+            frequentRenterPoints++;
+        }
+
+        return frequentRenterPoints;
+    }
 }
